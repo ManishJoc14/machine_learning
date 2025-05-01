@@ -29,3 +29,6 @@ build/
 
 # Cache
 .cache/
+
+# train and validation dataset of nn
+supervised learning/neural_networks/dataset/
