@@ -33,3 +33,6 @@ build/
 # train and validation dataset of nn
 supervised learning/neural_networks/dataset/
 supervised learning/neural_networks/convolution neural network/dataset/
+supervised learning/neural_networks/RCNN/faster_rcnn_finetuned.pth
+supervised learning/neural_networks/RCNN/output_video_with_boxes.mp4
+supervised learning/neural_networks/RCNN/RCNN_Car_video.mp4
