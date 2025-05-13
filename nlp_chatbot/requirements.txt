@@ -1,0 +1,10 @@
+streamlit
+torch
+numpy
+spacy
+pyttsx3
+soundfile
+torchvision
+torchaudio
+
+# python -m spacy download en_core_web_sm
