@@ -1,34 +1,51 @@
 import io
+import os
 import streamlit as st
 from chatbot.predict import get_response
+from utils.file_manager import save_uploaded_file
 
 # Function to display the training UI
 def show_training_ui():
     st.subheader("Train Your Chatbot")
 
+    # File uploader for custom intent JSON
     uploaded_file = st.file_uploader("Upload your intent.json", type="json")
+
+    # Checkbox for using the default intent JSON
     use_default = st.checkbox("Use default intent.json")
 
+    # Number of epochs for training
     epochs = st.number_input(
         "Training Epochs", min_value=1000, max_value=20000, value=1000, step=100
     )
-
-    if not uploaded_file and not use_default:
-        st.info("Upload a file or check 'Use default intent.json' to continue.")
 
     return uploaded_file, use_default, epochs
 
 
 # Function to handle the training process
-def handle_training(uploaded_file, epochs, save_uploaded_file_fn, train_model_fn):
-    # Save the uploaded file to a specific location
-    save_uploaded_file_fn(uploaded_file, "data/intents.json")
-    st.success("✅ File uploaded successfully!")
+def handle_training(uploaded_file, use_default, epochs, train_model_fn):
+    if use_default:
+        # Directly read the default file into memory
+        default_path = "data/default_intent.json"
+        if not os.path.exists(default_path):
+            st.error("❌ Default intent file not found at `data/default_intent.json`.")
+            return
 
-    # Train the model when the button is clicked
+        with open(default_path, "rb") as f:
+            file_content = f.read()
+
+        # Train the model using the default file content
+        with open("data/intents.json", "wb") as f:
+            f.write(file_content)  # Save it to a temporary location for training
+        st.success("✅ Using default intent.json for training.")
+    elif uploaded_file:
+        # Save the uploaded file directly
+        save_uploaded_file(uploaded_file, "data/intents.json")
+        st.success("✅ File uploaded successfully!")
+
+    # Proceed to train the model
     if st.button("Train Model"):
         with st.spinner("Training model..."):
-            # Call the training function with the uploaded file and epochs
             train_model_fn("data/intents.json", epochs)
         st.success("✅ Model trained and saved!")
         st.session_state.model_trained = True
