@@ -5,9 +5,13 @@ import os
 from utils.preprocess import preprocess_data
 from model.model_arch import ChatbotModel
 import streamlit as st
+from pathlib import Path 
 
 
 def train_model(json_path, epochs):
+    # Create directory for saving model
+    save_path = Path(__file__).resolve().parent / "saved_model"
+    
     # Preprocess the data and retrieve input/output sizes
     X, Y, input_size, output_size = preprocess_data(json_path)
 
@@ -43,8 +47,8 @@ def train_model(json_path, epochs):
         if loss.item() < best_loss:
             best_loss = loss.item()
             counter = 0
-            os.makedirs("saved_model", exist_ok=True)  # Ensure directory exists
-            torch.save(model.state_dict(), "saved_model/model.pth")  # Save model state
+            os.makedirs(save_path, exist_ok=True)  # Ensure directory exists
+            torch.save(model.state_dict(), save_path / "model.pth")  # Save model state
         else:
             counter += 1  # Increment counter if no improvement
 

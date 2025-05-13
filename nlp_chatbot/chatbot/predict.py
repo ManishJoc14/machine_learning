@@ -4,78 +4,62 @@ import json
 import numpy as np
 import spacy
 import en_core_web_sm
+from pathlib import Path
 from model.model_arch import ChatbotModel
 
-# Load the English language model from spaCy
 nlp = en_core_web_sm.load()
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Initialize global variable~s
-model = None  # Placeholder for the chatbot model
-words = []  # List of words used for training
-classes = []  # List of intent classes
-intents = {}  # Dictionary to store intents and responses
+model = None
+words = []
+classes = []
+intents = {}
 
 
 def load_model():
-    """
-    Load the trained model, words, classes, and intents from saved files.
-    """
     global model, words, classes, intents
 
-    # Load the list of words used for training
-    with open("saved_model/words.pkl", "rb") as f:
-        words = pickle.load(f)
+    try:
+        words_path = BASE_DIR / "saved_model" / "words.pkl"
+        classes_path = BASE_DIR / "saved_model" / "classes.pkl"
+        model_path = BASE_DIR / "saved_model" / "model.pth"
+        intents_path = BASE_DIR / "data" / "intents.json"
 
-    # Load the list of intent classes
-    with open("saved_model/classes.pkl", "rb") as f:
-        classes = pickle.load(f)
+        for path in [words_path, classes_path, model_path, intents_path]:
+            if not path.exists():
+                raise FileNotFoundError(f"❌ Missing file: {path}")
 
-    # Load the intents and responses from a JSON file
-    with open("data/intents.json", "r") as f:
-        intents = json.load(f)
+        with open(words_path, "rb") as f:
+            words = pickle.load(f)
+        with open(classes_path, "rb") as f:
+            classes = pickle.load(f)
+        with open(intents_path, "r") as f:
+            intents = json.load(f)
 
-    # Initialize the chatbot model with the appropriate input and output sizes
-    model = ChatbotModel(len(words), 512, len(classes))
+        model = ChatbotModel(len(words), 512, len(classes))
+        model.load_state_dict(torch.load(model_path))
+        model.eval()
 
-    # Load the trained model weights
-    model.load_state_dict(torch.load("saved_model/model.pth"))
-    model.eval()  # Set the model to evaluation mode
+    except Exception as e:
+        print(f"🚨 Error loading model: {e}")
+        raise
 
 
 def get_response(text):
-    """
-    Generate a response for the given input text.
-
-    Args:
-        text (str): The input text from the user.
-
-    Returns:
-        str: The chatbot's response.
-    """
-    # Load the model and data if not already loaded
     if model is None:
         load_model()
 
-    # Tokenize and lemmatize the input text using spaCy
     doc = nlp(text)
     tokens = [token.lemma_.lower() for token in doc]
-
-    # Create a bag-of-words representation for the input text
     bag = [1 if word in tokens else 0 for word in words]
     X = torch.tensor([bag], dtype=torch.float32)
 
-    # Predict the intent using the trained model
     with torch.no_grad():
         output = model(X)
-
-    # Get the predicted intent tag
     tag = classes[torch.argmax(output, dim=1).item()]
 
-    # Find the corresponding response for the predicted intent
     for intent in intents["intents"]:
         if intent["tag"] == tag:
             return np.random.choice(intent["responses"])
 
-    # Default response if no intent matches
     return "Sorry, I didn't understand that."

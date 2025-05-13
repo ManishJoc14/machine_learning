@@ -1,10 +1,8 @@
 import streamlit as st
-import os
-from utils.file_manager import save_uploaded_file
-from model.train import train_model
 from utils.ui_helpers import show_training_ui, handle_training, show_chat_ui
+from model.train import train_model
+from pathlib import Path
 
-# Streamlit page config
 st.set_page_config(page_title="NLP Chatbot", page_icon="🧠")
 
 # Session state initialization
@@ -17,12 +15,12 @@ if "chat_history" not in st.session_state:
 # Step 1: Training
 if not st.session_state.model_trained:
     uploaded_file, use_default, epochs = show_training_ui()
-
     handle_training(uploaded_file, use_default, epochs, train_model)
 
 # Step 2: Chat
 if st.session_state.model_trained:
-    if os.path.exists("saved_model/model.pth"):
+    model_path = Path(__file__).resolve().parent / "saved_model" / "model.pth"
+    if model_path.exists():
         show_chat_ui()
     else:
         st.warning("⚠️ Model not found. Please train the model first.")
