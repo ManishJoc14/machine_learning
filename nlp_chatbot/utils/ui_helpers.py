@@ -1,19 +1,22 @@
+import io
 import streamlit as st
 from chatbot.predict import get_response
 
-
 # Function to display the training UI
 def show_training_ui():
-    st.header("NLP Chatbot Trainer")
+    st.subheader("Train Your Chatbot")
 
-    # File uploader for intents.json
-    uploaded_file = st.file_uploader("Upload your intents.json", type=["json"])
-    # Input for specifying the number of training epochs
+    uploaded_file = st.file_uploader("Upload your intent.json", type="json")
+    use_default = st.checkbox("Use default intent.json")
+
     epochs = st.number_input(
-        "Number of epochs", min_value=1000, max_value=20000, value=10000
+        "Training Epochs", min_value=1000, max_value=20000, value=1000, step=100
     )
 
-    return uploaded_file, epochs
+    if not uploaded_file and not use_default:
+        st.info("Upload a file or check 'Use default intent.json' to continue.")
+
+    return uploaded_file, use_default, epochs
 
 
 # Function to handle the training process
@@ -52,3 +55,12 @@ def show_chat_ui():
         st.session_state.chat_history.append(("Bot", response))
 
         st.rerun()
+
+
+def create_uploaded_file_from_path(path, name="default.json"):
+    """Simulate a Streamlit uploaded file from a local file path."""
+    with open(path, "rb") as f:
+        file_content = f.read()
+        uploaded_file = io.BytesIO(file_content)
+        uploaded_file.name = name
+    return uploaded_file
