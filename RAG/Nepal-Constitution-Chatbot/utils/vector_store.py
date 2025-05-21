@@ -1,7 +1,6 @@
 from typing import List
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from pathlib import Path
 
 
 def create_vector_store(text_chunks: List[str]) -> FAISS:

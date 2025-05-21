@@ -1,5 +1,7 @@
 
-```markdown
+---
+
+````markdown
 # 🇳🇵 Nepal Constitution Chatbot
 
 A simple yet powerful chatbot to answer questions related to the **Constitution of Nepal**. Built using:
@@ -22,7 +24,19 @@ A simple yet powerful chatbot to answer questions related to the **Constitution 
 
 ---
 
-## 🚀 How It Works
+## 🧠 How It Works (RAG Pipeline)
+
+This chatbot uses the **RAG (Retrieval-Augmented Generation)** technique.
+
+### What is RAG?
+
+> **RAG** = *Retrieval* of relevant document chunks → *Augmented* into prompt → *Generated* answer from LLM.
+
+Instead of relying only on the model's memory, we fetch real document context and inject it into the model’s input. This results in far more accurate, grounded answers.
+
+---
+
+## 🚀 Pipeline Steps
 
 ### 1. Text Extraction
 We use `PyMuPDF` to extract the entire text from `Constitution-of-Nepal.pdf`.
@@ -47,7 +61,7 @@ The interface is built using Streamlit’s `st.chat_message` with persistent cha
 
 ```bash
 git clone https://github.com/ManishJoc14/machine_learning
-cd .\NLP\Nepal-Constitution-Chatbot\
+cd .\RAG\Nepal-Constitution-Chatbot\
 ````
 
 ### 2. Create & Activate Virtual Environment
@@ -76,6 +90,7 @@ LANGCHAIN_ENDPOINT=your_langchain_endpoint
 ```
 
 > 🔑 You can get a Groq API key from [https://console.groq.com](https://console.groq.com)
+> 🔑 You can get a LangChain API key from [https://smith.langchain.com/](https://smith.langchain.com/)
 
 ### 5. Run the App
 
@@ -89,9 +104,9 @@ streamlit run app.py
 
 Ask questions like:
 
-- "What is the role of the President according to the Constitution?"
-- "How is the Prime Minister elected?"
-- "What are the fundamental rights mentioned?"
+* "What is the role of the President according to the Constitution?"
+* "How is the Prime Minister elected?"
+* "What are the fundamental rights mentioned?"
 
 ---
 
@@ -99,22 +114,29 @@ Ask questions like:
 
 We are using:
 
-- Model: `llama3-70b-8192`
-- Provider: [Groq](https://groq.com/)
-- Embeddings: `sentence-transformers/all-MiniLM-L6-v2`
+* Model: `llama3-70b-8192`
+* Provider: [Groq](https://groq.com/)
+* Embeddings: `HuggingFaceEmbeddings`
 
 ---
 
 ## 📄 Acknowledgements
 
-- [LangChain](https://python.langchain.com/)
-- [Groq](https://groq.com/)
-- [HuggingFace](https://huggingface.co/)
-- [Streamlit](https://streamlit.io/)
-- [FAISS by Facebook AI](https://github.com/facebookresearch/faiss)
+* [LangChain](https://python.langchain.com/)
+* [Groq](https://groq.com/)
+* [HuggingFace](https://huggingface.co/)
+* [Streamlit](https://streamlit.io/)
+* [FAISS by Facebook AI](https://github.com/facebookresearch/faiss)
 
 ---
 
 ## 📬 License
 
 This project is for educational purposes only. Constitution content belongs to the Government of Nepal.
+
+```
+
+---
+
+Let me know if you'd like a short section on project folder structure or how to contribute.
+```
