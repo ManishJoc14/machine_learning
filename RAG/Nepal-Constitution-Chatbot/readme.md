@@ -15,7 +15,7 @@ A simple yet powerful chatbot to answer questions related to the **Constitution 
 
 ---
 
-## ✨ Features
+##  Features
 
 - Ask natural questions related to the Constitution of Nepal.
 - Fast and intelligent answers powered by LLaMA-3-70B via Groq.
@@ -24,7 +24,7 @@ A simple yet powerful chatbot to answer questions related to the **Constitution 
 
 ---
 
-## 🧠 How It Works (RAG Pipeline)
+##  How It Works (RAG Pipeline)
 
 This chatbot uses the **RAG (Retrieval-Augmented Generation)** technique.
 
@@ -36,7 +36,7 @@ Instead of relying only on the model's memory, we fetch real document context an
 
 ---
 
-## 🚀 Pipeline Steps
+##  Pipeline Steps
 
 ### 1. Text Extraction
 We use `PyMuPDF` to extract the entire text from `Constitution-of-Nepal.pdf`.
@@ -100,7 +100,7 @@ streamlit run app.py
 
 ---
 
-## ✅ Example Usage
+## Example Usage
 
 Ask questions like:
 
@@ -110,13 +110,28 @@ Ask questions like:
 
 ---
 
-## 🧠 Model Info
+## Model Info
 
 We are using:
 
 * Model: `llama3-70b-8192`
 * Provider: [Groq](https://groq.com/)
 * Embeddings: `HuggingFaceEmbeddings`
+
+---
+
+## How it works ?
+
+User types question
+    ↓
+Chat UI passes input to get_response()
+    ↓
+get_response() runs:
+    → FAISS retrieves top chunks from Constitution
+    → LLaMA-3 gets query + chunks
+    → Responds with an answer
+    ↓
+Chat UI displays answer and updates history
 
 ---
 
