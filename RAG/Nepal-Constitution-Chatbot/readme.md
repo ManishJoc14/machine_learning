@@ -1,7 +1,3 @@
-
----
-
-````markdown
 # 🇳🇵 Nepal Constitution Chatbot
 
 A simple yet powerful chatbot to answer questions related to the **Constitution of Nepal**. Built using:
@@ -148,10 +144,3 @@ Chat UI displays answer and updates history
 ## 📬 License
 
 This project is for educational purposes only. Constitution content belongs to the Government of Nepal.
-
-```
-
----
-
-Let me know if you'd like a short section on project folder structure or how to contribute.
-```
